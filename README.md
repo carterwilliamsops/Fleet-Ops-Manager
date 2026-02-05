@@ -1453,11 +1453,11 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ## 📞 Contact
 
-- **Project Lead**: Your Name
-- **Email**: contact@fleetmanager.com
-- **Website**: https://fleetmanager.com
-- **GitHub**: https://github.com/your-repo/fleet-manager-app
-- **Issues**: https://github.com/your-repo/fleet-manager-app/issues
+- **Project Lead**: Carter Williams
+- **Email**: carter.williams.ops@gmail.com
+- **Website**: 
+- **GitHub**: https://github.com/carterwilliamsops/Fleet-Ops-Manager/tree/main
+- **Issues**: https://github.com/carterwilliamsops/Fleet-Ops-Manager/issues
 
 ---
 

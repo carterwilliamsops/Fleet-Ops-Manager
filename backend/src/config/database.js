@@ -1,0 +1,20 @@
+const { Pool } = require('pg');
+require('dotenv').config();
+
+const pool = new Pool({
+  user: process.env.DB_USER || 'fleet_admin',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'fleet_manager',
+  password: process.env.DB_PASSWORD || 'your_secure_password',
+  port: process.env.DB_PORT || 5432,
+});
+
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1);
+});
+
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+  pool
+};

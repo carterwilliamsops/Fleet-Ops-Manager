@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Fleet Manager - Driver App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a4d2e;
+      --primary-light: #2d6945;
+      --secondary: #d4af37;
+      --background: #f8f9fa;
+      --surface: #ffffff;
+      --text: #1f1f1f;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --success: #059669;
+      --warning: #f59e0b;
+      --error: #dc2626;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .mobile-app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--background);
+      position: relative;
+    }
+
+    /* Mobile Header */
+    .mobile-header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .app-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .logo-accent {
+      color: var(--secondary);
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .user-greeting {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      z-index: 100;
+      box-shadow: 0 -2px 8px var(--shadow);
+    }
+
+    .tab-item {
+      flex: 1;
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+    }
+
+    .tab-item.active {
+      color: var(--primary);
+      background: rgba(26, 77, 46, 0.05);
+    }
+
+    .tab-icon {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .tab-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Content */
+    .content {
+      padding: 1.25rem;
+      padding-bottom: 80px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .action-btn {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .action-btn:active {
+      transform: scale(0.95);
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Scan Button */
+    .scan-button {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(26, 77, 46, 0.3);
+      margin-bottom: 1.5rem;
+    }
+
+    .scan-button:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(26, 77, 46, 0.3);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.875rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+      background: var(--surface);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Photo Upload */
+    .photo-upload {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--background);
+    }
+
+    .photo-upload:active {
+      border-color: var(--primary);
+      background: rgba(26, 77, 46, 0.05);
+    }
+
+    .photo-upload-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
+    .photo-preview {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:active {
+      background: var(--primary-light);
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--background);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* List Items */
+    .list-item {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+
+    .list-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .list-item-title {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .list-item-meta {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-success {
+      background: #d1fae5;
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: #fef3c7;
+      color: var(--warning);
+    }
+
+    .badge-error {
+      background: #fee2e2;
+      color: var(--error);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: flex-end;
+      z-index: 1000;
+      animation: fadeIn 0.2s;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: 20px 20px 0 0;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      animation: slideUp 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .close-btn {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    /* Success Message */
+    .success-message {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--success);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--text-light);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Login */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    }
+
+    .login-logo {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+
+    .login-logo-text {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: var(--error);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const API_BASE_URL = 'http://localhost:3001/api';
+
+    // API Service
+    const api = {
+      async request(endpoint, options = {}) {
+        const token = localStorage.getItem('token');
+        const headers = {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+          ...options.headers,
+        };
+
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+          ...options,
+          headers,
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+          }
+          throw new Error('API request failed');
+        }
+
+        return response.json();
+      },
+
+      auth: {
+        login: (email, password) =>
+          api.request('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+          }),
+      },
+
+      vehicles: {
+        getByVIN: (vin) => api.request(`/vehicles/vin/${vin}`),
+      },
+
+      tickets: {
+        getAll: (filters) => {
+          const params = new URLSearchParams(filters);
+          return api.request(`/tickets?${params}`);
+        },
+        create: (data) =>
+          api.request('/tickets', {
+            method: 'POST',
+            body: JSON.stringify(data),
+          }),
+      },
+    };
+
+    // Login Component
+    function LoginPage({ onLogin }) {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [error, setError] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+          const response = await api.auth.login(email, password);
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          onLogin(response.user);
+        } catch (err) {
+          setError('Invalid email or password');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="login-page">
+          <div className="login-logo">
+            <div className="login-logo-text">
+              Fleet<span style={{ color: 'var(--secondary)' }}>Manager</span>
+            </div>
+            <div style={{ fontSize: '0.875rem', marginTop: '0.5rem', opacity: 0.9 }}>
+              Driver Mobile App
+            </div>
+          </div>
+
+          <div className="login-card">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="driver@fleetmanager.com"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                />
+              </div>
+
+              {error && <div className="error-message">{error}</div>}
+
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </form>
+
+            <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--background)', borderRadius: '8px', fontSize: '0.875rem' }}>
+              <strong>Demo Account:</strong><br />
+              driver@fleetmanager.com / admin123
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Home View
+    function HomeView({ user }) {
+      return (
+        <div className="content">
+          <div className="card">
+            <h2 className="card-title">Welcome, {user.name}!</h2>
+            <p style={{ color: 'var(--text-light)' }}>
+              Use this app to report vehicle issues and track your maintenance tickets.
+            </p>
+          </div>
+
+          <div className="quick-actions">
+            <div className="action-btn">
+              <span className="action-icon">🚗</span>
+              Report Issue
+            </div>
+            <div className="action-btn">
+              <span className="action-icon">📋</span>
+              My Tickets
+            </div>
+            <div className="action-btn">
+              <span className="action-icon">📸</span>
+              Quick Photo
+            </div>
+            <div className="action-btn">
+              <span className="action-icon">📍</span>
+              Emergency
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 className="card-title">Recent Activity</h3>
+            <div className="empty-state">
+              <div className="empty-icon">📋</div>
+              <p>No recent tickets</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Submit Ticket View
+    function SubmitTicketView({ user, onSuccess }) {
+      const [step, setStep] = useState(1);
+      const [vin, setVin] = useState('');
+      const [vehicle, setVehicle] = useState(null);
+      const [category, setCategory] = useState('');
+      const [priority, setPriority] = useState('Medium');
+      const [description, setDescription] = useState('');
+      const [photo, setPhoto] = useState(null);
+      const [loading, setLoading] = useState(false);
+
+      const categories = [
+        'Engine',
+        'Brakes',
+        'Tires',
+        'Electrical',
+        'HVAC',
+        'Transmission',
+        'Suspension',
+        'Body/Paint',
+        'Interior',
+        'Other'
+      ];
+
+      const handleScanVIN = () => {
+        // Simulated VIN scan for demo
+        const demoVIN = '1HGCM82633A123456';
+        setVin(demoVIN);
+        loadVehicle(demoVIN);
+      };
+
+      const loadVehicle = async (vinCode) => {
+        setLoading(true);
+        try {
+          const vehicleData = await api.vehicles.getByVIN(vinCode);
+          setVehicle(vehicleData);
+          setStep(2);
+        } catch (error) {
+          alert('Vehicle not found. Please check the VIN and try again.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const handlePhotoCapture = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => setPhoto(e.target.result);
+          reader.readAsDataURL(file);
+        }
+      };
+
+      const handleSubmit = async () => {
+        if (!category || !description) {
+          alert('Please fill in all required fields');
+          return;
+        }
+
+        setLoading(true);
+        try {
+          await api.tickets.create({
+            vehicle_id: vehicle.id,
+            submitted_by: user.id,
+            category,
+            priority,
+            description,
+            photo_url: photo || null,
+          });
+
+          onSuccess();
+        } catch (error) {
+          alert('Failed to submit ticket. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="content">
+          {step === 1 && (
+            <>
+              <button className="scan-button" onClick={handleScanVIN}>
+                <span style={{ fontSize: '1.5rem' }}>📷</span>
+                Scan VIN Barcode
+              </button>
+
+              <div className="card">
+                <h3 className="card-title">Or Enter VIN Manually</h3>
+                <div className="form-group">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Enter 17-digit VIN"
+                    value={vin}
+                    onChange={(e) => setVin(e.target.value.toUpperCase())}
+                    maxLength="17"
+                  />
+                </div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => loadVehicle(vin)}
+                  disabled={vin.length !== 17 || loading}
+                >
+                  {loading ? 'Loading...' : 'Continue'}
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 2 && vehicle && (
+            <>
+              <div className="card">
+                <h3 className="card-title">Vehicle Information</h3>
+                <div style={{ marginBottom: '1rem' }}>
+                  <strong>{vehicle.make} {vehicle.model} ({vehicle.year})</strong>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>
+                    VIN: {vehicle.vin}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Issue Category *</label>
+                  <select
+                    className="form-select"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option value="">Select category...</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Priority</label>
+                  <select
+                    className="form-select"
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Description *</label>
+                  <textarea
+                    className="form-textarea"
+                    placeholder="Describe the issue in detail..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Add Photo (Optional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    style={{ display: 'none' }}
+                    id="photo-input"
+                    onChange={handlePhotoCapture}
+                  />
+                  <label htmlFor="photo-input" className="photo-upload">
+                    <div className="photo-upload-icon">📸</div>
+                    <div>Tap to capture photo</div>
+                  </label>
+                  {photo && (
+                    <img src={photo} alt="Preview" className="photo-preview" />
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setStep(1)}
+                    style={{ flex: 1 }}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    style={{ flex: 2 }}
+                  >
+                    {loading ? 'Submitting...' : 'Submit Ticket'}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    // My Tickets View
+    function MyTicketsView({ user }) {
+      const [tickets, setTickets] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      useEffect(() => {
+        loadTickets();
+      }, []);
+
+      const loadTickets = async () => {
+        try {
+          const data = await api.tickets.getAll({});
+          const myTickets = data.filter(t => t.submitted_by === user.id);
+          setTickets(myTickets);
+        } catch (error) {
+          console.error('Failed to load tickets:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const getStatusBadge = (status) => {
+        const badges = {
+          'Open': 'badge-warning',
+          'In Progress': 'badge-warning',
+          'Closed': 'badge-success',
+        };
+        return badges[status] || 'badge-warning';
+      };
+
+      if (loading) {
+        return (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>Loading tickets...</p>
+          </div>
+        );
+      }
+
+      return (
+        <div className="content">
+          <div className="card">
+            <h2 className="card-title">My Tickets</h2>
+            {tickets.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">📋</div>
+                <p>No tickets submitted yet</p>
+              </div>
+            ) : (
+              tickets.map(ticket => (
+                <div key={ticket.id} className="list-item">
+                  <div className="list-item-header">
+                    <div className="list-item-title">#{ticket.id} - {ticket.category}</div>
+                    <span className={`badge ${getStatusBadge(ticket.status)}`}>
+                      {ticket.status}
+                    </span>
+                  </div>
+                  <div>{ticket.description}</div>
+                  <div className="list-item-meta">
+                    {ticket.make} {ticket.model} • {new Date(ticket.created_at).toLocaleDateString()}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Success Modal
+    function SuccessModal({ onClose }) {
+      return (
+        <div className="modal" onClick={onClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="success-message">
+              <div className="success-icon">✅</div>
+              <div className="success-title">Ticket Submitted!</div>
+              <p style={{ color: 'var(--text-light)', marginBottom: '1.5rem' }}>
+                Your maintenance request has been submitted successfully.
+                You'll be notified when it's assigned to a technician.
+              </p>
+              <button className="btn btn-primary" onClick={onClose}>
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Main Mobile App
+    function MobileApp() {
+      const [user, setUser] = useState(null);
+      const [currentView, setCurrentView] = useState('home');
+      const [showSuccess, setShowSuccess] = useState(false);
+
+      useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      }, []);
+
+      const handleLogin = (userData) => {
+        setUser(userData);
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+      };
+
+      const handleTicketSuccess = () => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          setCurrentView('tickets');
+        }, 2000);
+      };
+
+      if (!user) {
+        return <LoginPage onLogin={handleLogin} />;
+      }
+
+      const renderView = () => {
+        switch (currentView) {
+          case 'home':
+            return <HomeView user={user} />;
+          case 'submit':
+            return <SubmitTicketView user={user} onSuccess={handleTicketSuccess} />;
+          case 'tickets':
+            return <MyTicketsView user={user} />;
+          default:
+            return <HomeView user={user} />;
+        }
+      };
+
+      return (
+        <div className="mobile-app">
+          <header className="mobile-header">
+            <div className="header-top">
+              <div className="app-logo">
+                Fleet<span className="logo-accent">Manager</span>
+              </div>
+              <div className="header-icons">
+                <span onClick={handleLogout}>🚪</span>
+              </div>
+            </div>
+            <div className="user-greeting">
+              👋 Hello, {user.name}
+            </div>
+          </header>
+
+          {renderView()}
+
+          {showSuccess && <SuccessModal onClose={() => setShowSuccess(false)} />}
+
+          <nav className="tab-bar">
+            <button
+              className={`tab-item ${currentView === 'home' ? 'active' : ''}`}
+              onClick={() => setCurrentView('home')}
+            >
+              <span className="tab-icon">🏠</span>
+              <span className="tab-label">Home</span>
+            </button>
+            <button
+              className={`tab-item ${currentView === 'submit' ? 'active' : ''}`}
+              onClick={() => setCurrentView('submit')}
+            >
+              <span className="tab-icon">➕</span>
+              <span className="tab-label">Report</span>
+            </button>
+            <button
+              className={`tab-item ${currentView === 'tickets' ? 'active' : ''}`}
+              onClick={() => setCurrentView('tickets')}
+            >
+              <span className="tab-icon">📋</span>
+              <span className="tab-label">Tickets</span>
+            </button>
+          </nav>
+        </div>
+      );
+    }
+
+    // Render
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<MobileApp />);
+  </script>
+</body>
+</html>

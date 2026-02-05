@@ -1132,31 +1132,6 @@ fleet-manager-app/
 ## 🧪 Testing
 
 ### Manual Testing Checklist
-- [ ] User authentication (login/logout)
-- [ ] Vehicle CRUD operations
-- [ ] Ticket submission flow
-- [ ] Work order creation and completion
-- [ ] Analytics dashboard loads correctly
-- [ ] CSV export downloads
-- [ ] PDF export generates correctly
-- [ ] Mobile app barcode scanning
-- [ ] Photo upload functionality
-
-### API Testing with cURL
-```bash
-# Login
-curl -X POST http://localhost:3001/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@fleetmanager.com","password":"admin123"}'
-
-# Get vehicles (replace TOKEN)
-curl http://localhost:3001/api/vehicles \
-  -H "Authorization: Bearer TOKEN"
-```
-
-## 🧪 Testing
-
-### Manual Testing Checklist
 
 **Authentication**
 - [ ] Admin login successful

@@ -65,8 +65,6 @@ npm start
 
 ## 🎯 Features
 
-## 🎯 Features
-
 ### 🖥️ Web Dashboard (Admin/Manager Interface)
 
 **Fleet Management**
